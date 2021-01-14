@@ -1,29 +1,29 @@
 //!
 //! # unfold
-//! 
+//!
 //! The [unfold](https://en.wikipedia.org/wiki/Fold_(higher-order_function))
-//! function takes as input a function *f* and an initial *i* value and returns 
-//! a list defined as 
+//! function takes as input a function *f* and an initial *i* value and returns
+//! a list defined as
 //! [i, f(i), f(f(i)), ...].
-//! 
+//!
 //!   
-//! This library defines ```Unfold``` a struct 
-//! that implements the unfold function as an *endless* 
-//! iterator. 
-//! 
+//! This library defines ```Unfold``` a struct
+//! that implements the unfold function as an *endless*
+//! iterator.
+//!
 //!
 //! ## Quick Start
-//! 
+//!
 //! To use ```Unfold``` is quite simple. The user calls
 //! the new function providing a function as first argument
-//! and the initial value as second argument. 
-//! An ```Unfold``` instance can be then used as any iterator, 
+//! and the initial value as second argument.
+//! An ```Unfold``` instance can be then used as any iterator,
 //! but don't forget: Unfold never ends, it must be stopped.
 //!
 //! Here an example:
 //! ```
 //! use unfold::Unfold;
-//! 
+//!
 //! // Create a vector containing the first 5 numbers from the Fibonacci
 //! // series
 //! let fibonacci_numbers: Vec<u64> = Unfold::new(|(a, b)| (b, a + b), (0, 1))
@@ -35,6 +35,13 @@
 //!
 //!
 
+pub fn unfold<T, F>(func: F, init: T) -> Unfold<T, F>
+where
+    F: Fn(T) -> T,
+    T: Copy,
+{
+    Unfold::new(func, init)
+}
 
 /// Define an endless unfold iterator
 pub struct Unfold<T, F>
@@ -60,8 +67,20 @@ where
     ///
     ///```
     pub fn new(function: F, init: T) -> Self {
-        Self { func: function, curr: init }
+        Self {
+            func: function,
+            curr: init,
+        }
     }
+
+    pub fn to_vector(self, len: usize) -> Vec<T> {
+        self.take(len).collect()
+    }
+
+    pub fn take_nth(self, index: usize) -> T {
+        self.take(index).last().unwrap()
+    }
+
 }
 
 impl<T, F> Iterator for Unfold<T, F>
