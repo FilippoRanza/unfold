@@ -1,5 +1,8 @@
 # unfold
+![Rust](https://github.com/FilippoRanza/unfold/workflows/Rust/badge.svg?branch=master) ![crates.io](https://img.shields.io/crates/v/unfold.svg)
+
 A simple unfold implementation in Rust
+
 
 [unfold](https://en.wikipedia.org/wiki/Fold_(higher-order_function)) let you 
 create an iterator that, staring from a given initial value, 
