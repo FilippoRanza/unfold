@@ -44,29 +44,28 @@ where
 }
 
 pub fn unfold_vector<T, F>(func: F, init: T, len: usize) -> Vec<T>
-where 
-F: Fn(T) -> T,
-T: Copy,
+where
+    F: Fn(T) -> T,
+    T: Copy,
 {
     unfold(func, init).take(len).collect()
 }
 
 pub fn unfold_nth<T, F>(func: F, init: T, index: usize) -> T
-where 
-F: Fn(T) -> T,
-T: Copy,
+where
+    F: Fn(T) -> T,
+    T: Copy,
 {
     unfold(func, init).take(index).last().unwrap()
 }
 
 pub fn unfold_count<T, F>(func: F, init: T, count: usize) -> impl Iterator<Item = T>
-where 
-F: Fn(T) -> T,
-T: Copy,
+where
+    F: Fn(T) -> T,
+    T: Copy,
 {
     unfold(func, init).take(count)
 }
-
 
 /// Define an endless unfold iterator
 pub struct Unfold<T, F>
@@ -127,7 +126,6 @@ mod tests {
         assert_eq!(fib, 13);
     }
 
-
     #[test]
     fn test_unfold_nth() {
         let fib = unfold_nth(|(a, b)| (b, a + b), (0, 1), 8).0;
@@ -150,8 +148,5 @@ mod tests {
         assert_eq!(iter.next(), Some(3));
         assert_eq!(iter.next(), Some(4));
         assert_eq!(iter.next(), None);
-        
     }
-
-
 }

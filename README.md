@@ -13,7 +13,7 @@ Unfold defines an endless iterator: you must stop it *by hand*, like in the
 example. 
 
 ## Example
-```
+```rust
 use unfold::Unfold;
 
 // Create a vector containing the first 5 numbers from the Fibonacci
