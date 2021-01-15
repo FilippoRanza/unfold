@@ -48,7 +48,7 @@ where
 F: Fn(T) -> T,
 T: Copy,
 {
-    unfold(func, init).to_vector(len)
+    unfold(func, init).take(len).collect()
 }
 
 pub fn unfold_nth<T, F>(func: F, init: T, index: usize) -> T
@@ -56,7 +56,15 @@ where
 F: Fn(T) -> T,
 T: Copy,
 {
-    unfold(func, init).take_nth(index)
+    unfold(func, init).take(index).last().unwrap()
+}
+
+pub fn unfold_count<T, F>(func: F, init: T, count: usize) -> impl Iterator<Item = T>
+where 
+F: Fn(T) -> T,
+T: Copy,
+{
+    unfold(func, init).take(count)
 }
 
 
@@ -89,15 +97,6 @@ where
             curr: init,
         }
     }
-
-    pub fn to_vector(self, len: usize) -> Vec<T> {
-        self.take(len).collect()
-    }
-
-    pub fn take_nth(self, index: usize) -> T {
-        self.take(index).last().unwrap()
-    }
-
 }
 
 impl<T, F> Iterator for Unfold<T, F>
@@ -127,4 +126,32 @@ mod tests {
             .unwrap();
         assert_eq!(fib, 13);
     }
+
+
+    #[test]
+    fn test_unfold_nth() {
+        let fib = unfold_nth(|(a, b)| (b, a + b), (0, 1), 8).0;
+        assert_eq!(fib, 13);
+    }
+
+    #[test]
+    fn test_unfold_vector() {
+        let count = unfold_vector(|x| x + 1, 0, 10);
+        let result: Vec<i32> = (0..10).collect();
+        assert_eq!(count, result);
+    }
+
+    #[test]
+    fn test_unfold_count() {
+        let mut iter = unfold_count(|x| x + 1, 0, 5);
+        assert_eq!(iter.next(), Some(0));
+        assert_eq!(iter.next(), Some(1));
+        assert_eq!(iter.next(), Some(2));
+        assert_eq!(iter.next(), Some(3));
+        assert_eq!(iter.next(), Some(4));
+        assert_eq!(iter.next(), None);
+        
+    }
+
+
 }
