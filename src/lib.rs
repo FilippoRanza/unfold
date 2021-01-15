@@ -43,6 +43,23 @@ where
     Unfold::new(func, init)
 }
 
+pub fn unfold_vector<T, F>(func: F, init: T, len: usize) -> Vec<T>
+where 
+F: Fn(T) -> T,
+T: Copy,
+{
+    unfold(func, init).to_vector(len)
+}
+
+pub fn unfold_nth<T, F>(func: F, init: T, index: usize) -> T
+where 
+F: Fn(T) -> T,
+T: Copy,
+{
+    unfold(func, init).take_nth(index)
+}
+
+
 /// Define an endless unfold iterator
 pub struct Unfold<T, F>
 where
