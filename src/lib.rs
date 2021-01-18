@@ -35,6 +35,10 @@
 //!
 //!
 
+///
+/// This function it is a simple front-end to 
+/// Unfold::new : allows the user to easly create a 
+/// new Unfold iterator
 pub fn unfold<T, F>(func: F, init: T) -> Unfold<T, F>
 where
     F: Fn(T) -> T,
@@ -43,6 +47,16 @@ where
     Unfold::new(func, init)
 }
 
+/// This function create an unfold iterator and collects 
+/// its first *len* items into a vector
+/// 
+/// ```
+/// use unfold::unfold_vector;
+/// 
+/// let exp_growth = unfold_vector(|x| 2 * x, 1, 10);
+/// 
+/// assert_eq!(exp_growth, vec![1, 2, 4, 8, 16, 32, 64, 128, 256, 512]);
+/// ```
 pub fn unfold_vector<T, F>(func: F, init: T, len: usize) -> Vec<T>
 where
     F: Fn(T) -> T,
@@ -51,6 +65,16 @@ where
     unfold(func, init).take(len).collect()
 }
 
+
+///This function create an unfold iterator and returns
+/// its *index*-th item. 
+/// ```
+/// use unfold::unfold_nth;
+/// 
+/// let n = unfold_nth(|x| x + 1, 0, 10);
+/// assert_eq!(n, 9);
+/// 
+/// ```
 pub fn unfold_nth<T, F>(func: F, init: T, index: usize) -> T
 where
     F: Fn(T) -> T,
@@ -59,6 +83,20 @@ where
     unfold(func, init).take(index).last().unwrap()
 }
 
+
+/// This function create an unfold iterator that stops 
+/// at *count* iterations. 
+/// Note this is a standard lazy iterator
+/// ```
+/// use unfold::unfold_count;
+/// 
+/// let mut next_odd = unfold_count(|x| x + 2, 1, 3);
+/// assert_eq!(next_odd.next(), Some(1)); 
+/// assert_eq!(next_odd.next(), Some(3)); 
+/// assert_eq!(next_odd.next(), Some(5)); 
+/// assert_eq!(next_odd.next(), None); 
+/// 
+/// ```
 pub fn unfold_count<T, F>(func: F, init: T, count: usize) -> impl Iterator<Item = T>
 where
     F: Fn(T) -> T,
