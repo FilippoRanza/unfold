@@ -37,7 +37,7 @@
 
 ///
 /// This function it is a simple front-end to 
-/// Unfold::new : allows the user to easly create a 
+/// Unfold::new : allows the user to easily create a 
 /// new Unfold iterator
 pub fn unfold<T, F>(func: F, init: T) -> Unfold<T, F>
 where
